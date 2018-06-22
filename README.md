@@ -1,4 +1,4 @@
-# Beato-ThreadUtils
+# Beato-Thread-Utils
 a set of utilities made in c++ for multi threaded tasks, with SDL2 based portability
 - Base class for simple thread based implementation.
 - Mutexes, Conditions e semaphores classes to easy the implement.
@@ -8,7 +8,7 @@ a set of utilities made in c++ for multi threaded tasks, with SDL2 based portabi
 - Reference counting.
 - intrusive pointer with reference counting, with auto deletion for garbage collection.
 
-# Beato-ThreadUtils
+# Beato-Thread-Utils
 um conjunto de utlidades em c++ para programação em multitarefa, com portabilidade baseada na biblioteca SDL2.
 
 - Classe base para implementação baseada em thread simples.

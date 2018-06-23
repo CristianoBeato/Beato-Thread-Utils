@@ -128,8 +128,6 @@ private:
 	const char* loadPath;
 };
 
-
-
 static void setUp(void)
 {
 }
@@ -212,7 +210,7 @@ int main(int argc, char *argv[])
 	//set to detach , so we don't need wait for thread when he ends
 	worker.start(0, true);
 
-	//star loading images in the woker thread
+	// let the woker thread load texture wile the main thread deal whit the render
 	worker.enqueueCapsule(new texLoadCall("assets/guide_base.bmp", base));
 	worker.enqueueCapsule(new texLoadCall("assets/guide_up.bmp", upSurf));
 	worker.enqueueCapsule(new texLoadCall("assets/guide_down.bmp", DnSurf));
@@ -229,36 +227,34 @@ int main(int argc, char *argv[])
 		SDL_SetRenderDrawColor(windowRender, 255, 255, 255, 255);
 		SDL_RenderFillRect(windowRender, &cleanRec);
 		base->renderTexture();
-#if 1
-		//the main thread will wait until sdl handle a user event
-		SDL_WaitEvent(&evt);
-#else
-		SDL_PollEvent(&evt);
-#endif
-		if (evt.type == SDL_QUIT)
-			done = true;
-		else if (evt.type == SDL_KEYDOWN)
+
+		while(SDL_PollEvent(&evt) != 0);
 		{
-			SDL_KeyboardEvent keyEvt = evt.key;
-			switch (keyEvt.keysym.sym)
-			{
-			case SDLK_ESCAPE:
+			if (evt.type == SDL_QUIT)
 				done = true;
-				break;
-			case SDLK_UP:
-				upSurf->renderTexture();
-				break;
-			case SDLK_DOWN:
-				DnSurf->renderTexture();
-				break;
-			case SDLK_LEFT:
-				LfSurf->renderTexture();
-				break;
-			case SDLK_RIGHT:
-				RgSurf->renderTexture();
-				break;
-			default:
-				continue;
+			else if (evt.type == SDL_KEYDOWN)
+			{
+				SDL_KeyboardEvent keyEvt = evt.key;
+				switch (keyEvt.keysym.sym)
+				{
+				case SDLK_ESCAPE:
+					done = true;
+					break;
+				case SDLK_UP:
+					upSurf->renderTexture();
+					break;
+				case SDLK_DOWN:
+					DnSurf->renderTexture();
+					break;
+				case SDLK_LEFT:
+					LfSurf->renderTexture();
+					break;
+				case SDLK_RIGHT:
+					RgSurf->renderTexture();
+					break;
+				default:
+					continue;
+				}
 			}
 		}
 		//updates the renderer

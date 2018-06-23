@@ -29,7 +29,7 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
 
-#include "btPrecompiledHeader.h"
+#include "precompiled.h"
 #pragma hdrstop
 
 #include "btThreadBase.hpp"

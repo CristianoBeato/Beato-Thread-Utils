@@ -28,58 +28,8 @@ If you have questions concerning this license or the applicable additional terms
 you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
-#ifndef _THREAD_BASE_H_
-#define _THREAD_BASE_H_
 
-#include "btCommon.hpp"
+#include "precompiled.h"
+#pragma hdrstop
 
-namespace beatoThread
-{
-	using namespace btTypes;
-	//Thread Base Class
-	class btThreadBase
-	{
-	public:
-
-		btThreadBase(void);
-		btThreadBase(const char name);
-		virtual ~btThreadBase(void);
-
-		//start up the thread, 
-		//Priority, set the thread running priority
-		//detach, detach the thread, util for long time running thread, 
-		//thath you don't need chath the return, or dont need be wayted 
-		void	start(btUint32 Priority = 0, bool detach = false);
-
-		//wait thread end
-		int		wait(void);
-
-		//send a exit signal, set true on wait to wait for thread
-		int		exit(bool Wait);
-
-		//check if thread is quiting 
-		bool	isPendingExit(void) const;
-
-		//get the id of the thread
-		const btNativeThrHandle	getThreadID(void) const;
-
-		//check if are the same thread thast make a call 
-		bool	isCurretThread(void);
-
-	protected:
-		// Worker routine
-		virtual int run(void) = 0;
-		virtual void notifyExit(void) {};
-
-	private:
-		void	applyThreadPriority(void);
-		static int threadStaticEntryPoint(void* Ptr);
-		
-		volatile bool	m_pendingExit;
-		btThrHandle		m_threadHandle;
-		const char		m_threadName;
-		btUint32		m_threadpriority;
-	};
-};
-
-#endif // !_THREAD_BASE_H_
+#include "btInstrusivePointer.hpp"

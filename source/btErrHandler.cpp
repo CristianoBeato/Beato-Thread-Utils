@@ -29,7 +29,7 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
 
-#include "btPrecompiledHeader.h"
+#include "precompiled.h"
 #pragma hdrstop
 
 #include "btErrHandler.hpp"
@@ -39,7 +39,7 @@ static std::vector<std::string> m_errorList = std::vector<std::string>();
 
 #define	MAX_PRINT_MSG_SIZE	4096
 
-static void VprintfStr(std::string & str, const char * fmt, va_list args)
+static void BT_THREAD_CALL VprintfStr(std::string & str, const char * fmt, va_list args)
 {
 	char msg[MAX_PRINT_MSG_SIZE];
 	SDL_vsnprintf(msg, MAX_PRINT_MSG_SIZE, fmt, args);
@@ -52,7 +52,7 @@ static void VprintfStr(std::string & str, const char * fmt, va_list args)
 }
 
 
-void beatoThread::btErrorHandler::btSetError(const char * fmt, ...)
+void BT_THREAD_CALL beatoThread::btErrorHandler::btSetError(const char * fmt, ...)
 {
 	std::string str;
 	va_list argptr;
@@ -64,7 +64,7 @@ void beatoThread::btErrorHandler::btSetError(const char * fmt, ...)
 	m_errorList.push_back(str);
 }
 
-const char * beatoThread::btErrorHandler::btGetErr(void)
+const char *  BT_THREAD_CALL beatoThread::btErrorHandler::btGetErr(void)
 {
 
 	btUint32 numErr = 0;
@@ -74,12 +74,12 @@ const char * beatoThread::btErrorHandler::btGetErr(void)
 	return m_errorList.at(numErr).c_str();
 }
 
-void beatoThread::btErrorHandler::btClearError(void)
+void BT_THREAD_CALL beatoThread::btErrorHandler::btClearError(void)
 {
 	m_errorList.pop_back();
 }
 
-beatoThread::btUint32 beatoThread::btErrorHandler::btGetNumErrors(void)
+beatoThread::btUint32 BT_THREAD_CALL beatoThread::btErrorHandler::btGetNumErrors(void)
 {
 	return m_errorList.size();
 }

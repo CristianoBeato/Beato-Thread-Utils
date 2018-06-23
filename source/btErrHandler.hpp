@@ -32,7 +32,7 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 #ifndef _ERROR_HANDLER_H_
 #define _ERROR_HANDLER_H_
 
-#include "btTypes.hpp"
+#include "btCommon.hpp"
 
 namespace beatoThread
 {
@@ -40,13 +40,13 @@ namespace beatoThread
 	namespace btErrorHandler
 	{
 		//this set a cont string error
-		static void				btSetError(const char * fmt, ...);
+		BT_THREAD_API void	BT_THREAD_CALL				btSetError(const char * fmt, ...);
 		//get the last err
-		static	const char*		btGetErr(void);
+		BT_THREAD_API const char* BT_THREAD_CALL		btGetErr(void);
 		//clear the last error
-		static	void			btClearError(void);
+		BT_THREAD_API void	BT_THREAD_CALL				btClearError(void);
 		//get the number of sistem errors
-		static	btUint32		btGetNumErrors(void);
+		BT_THREAD_API btUint32	BT_THREAD_CALL			btGetNumErrors(void);
 
 	};
 };

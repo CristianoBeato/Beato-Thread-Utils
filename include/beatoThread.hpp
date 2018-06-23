@@ -31,4 +31,11 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 #ifndef _BEATO_THREAD_LIBRARY_H_
 #define _BEATO_THREAD_LIBRARY_H_
 
+//
+#include "btCommon.hpp"
+#include "btThreadBase.hpp"
+#include "btCriticalSection.hpp"
+#include "btAtomic.hpp"
+#include "btInstrusivePointer.hpp"
+
 #endif // !_BEATO_THREAD_LIBRARY_H_

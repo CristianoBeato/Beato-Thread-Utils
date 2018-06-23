@@ -29,44 +29,44 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
 
-#include "btPrecompiledHeader.h"
+#include "precompiled.h"
 #pragma hdrstop
 
 #include "btCriticalSection.hpp"
 
-btMutex::btMutex(void)
+beatoThread::btMutex::btMutex(void)
 {
 	m_mtxHandle = SDL_CreateMutex();
 	SDL_assert(m_mtxHandle);
 }
 
-btMutex::~btMutex(void)
+beatoThread::btMutex::~btMutex(void)
 {
-	SDL_DestroyMutex(m_mtxHandle);
+	SDL_DestroyMutex(static_cast<SDL_mutex*>(m_mtxHandle));
 	m_mtxHandle = nullptr;
 }
 
-bool btMutex::tryLock(void) const
+bool beatoThread::btMutex::tryLock(void) const
 {
-	return (SDL_TryLockMutex(m_mtxHandle) != -1);
+	return (SDL_TryLockMutex(static_cast<SDL_mutex*>(m_mtxHandle)) != -1);
 }
 
-void btMutex::lock(void) const
+void beatoThread::btMutex::lock(void) const
 {
-	SDL_assert(SDL_LockMutex(m_mtxHandle) != -1);
+	SDL_assert(SDL_LockMutex(static_cast<SDL_mutex*>(m_mtxHandle)) != -1);
 }
 
-void btMutex::unlock(void) const
+void beatoThread::btMutex::unlock(void) const
 {
-	SDL_assert(SDL_UnlockMutex(m_mtxHandle) != -1);
+	SDL_assert(SDL_UnlockMutex(static_cast<SDL_mutex*>(m_mtxHandle)) != -1);
 }
 
-btMutexLock::btMutexLock(btMutex * mtx) : m_mutex(mtx)
+beatoThread::btMutexLock::btMutexLock(btMutex * mtx) : m_mutex(mtx)
 {
 	m_mutex->lock();
 }
 
-btMutexLock::~btMutexLock(void)
+beatoThread::btMutexLock::~btMutexLock(void)
 {
 	m_mutex->unlock();
 }

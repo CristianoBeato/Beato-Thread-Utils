@@ -29,21 +29,4 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
 
-/*Precompiled header to help speed up the compilation*/
-#ifndef _PRECOMPILED_H_
-#define _PRECOMPILED_H_
-
-//SDL includes
-#include <SDL_assert.h>
-#include <SDL_thread.h>
-#include <SDL_mutex.h>
-#include <SDL_atomic.h>
-
-#include <vector>
-
-#include "btTypes.hpp"
-#include "btAtomic.hpp"
-#include "btCriticalSection.hpp"
-#include "btErrHandler.hpp"
-
-#endif //!_PRECOMPILED_H_
+#include "precompiled.h"

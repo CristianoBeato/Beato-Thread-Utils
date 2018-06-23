@@ -29,46 +29,52 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
 
-#include "btPrecompiledHeader.h"
+#include "precompiled.h"
 #pragma hdrstop
 
 #include "btAtomic.hpp"
 
-btReferenceCounter::btReferenceCounter(void)
+beatoThread::btReferenceCounter::btReferenceCounter(void)
 {
-	SDL_AtomicSet(&RefCounter, 1);
+	m_counter = new SDL_atomic_t;
+	SetRefCount(1);
 }
 
-btReferenceCounter::~btReferenceCounter(void)
+beatoThread::btReferenceCounter::~btReferenceCounter(void)
 {
+	if (m_counter != nullptr)
+	{
+		delete m_counter;
+		m_counter = nullptr;
+	}
 }
 
-void btReferenceCounter::IncRefCount(void)
+void beatoThread::btReferenceCounter::IncRefCount(void)
 {
-	SDL_AtomicIncRef(&RefCounter);
+	SDL_AtomicIncRef(static_cast<SDL_atomic_t*>(m_counter));
 }
 
-void btReferenceCounter::DecRefCount(void)
+void beatoThread::btReferenceCounter::DecRefCount(void)
 {
-	SDL_AtomicDecRef(&RefCounter);
+	SDL_AtomicDecRef(static_cast<SDL_atomic_t*>(m_counter));
 }
 
-void btReferenceCounter::SetRefCount(int val)
+void beatoThread::btReferenceCounter::SetRefCount(int val)
 {
-	SDL_AtomicSet(&RefCounter, val);
+	SDL_AtomicSet(static_cast<SDL_atomic_t*>(m_counter), val);
 }
 
-int btReferenceCounter::GetRefCount(void)
+int beatoThread::btReferenceCounter::GetRefCount(void)
 {
-	return SDL_AtomicGet(&RefCounter);
+	return SDL_AtomicGet(static_cast<SDL_atomic_t*>(m_counter));
 }
 
-void btRefObj::IncRefCount(void)
+void beatoThread::btRefObj::IncRefCount(void)
 {
 	btReferenceCounter::IncRefCount();
 }
 
-void btRefObj::DecRefCount(void)
+void beatoThread::btRefObj::DecRefCount(void)
 {
 	btReferenceCounter::DecRefCount();
 
@@ -80,13 +86,13 @@ void btRefObj::DecRefCount(void)
 	}
 }
 
-void btRefObj::IncRef(void * p)
+void beatoThread::btRefObj::IncRef(void * p)
 {
 	if (p)
 		reinterpret_cast<btRefObj*>(p)->IncRefCount();
 }
 
-void btRefObj::DecRef(void * p)
+void beatoThread::btRefObj::DecRef(void * p)
 {
 	if (p)
 		reinterpret_cast<btRefObj*>(p)->DecRefCount();

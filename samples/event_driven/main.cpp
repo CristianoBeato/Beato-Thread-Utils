@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with btThread Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the btThread Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the terms and conditions 
+You should have received a copy of these additional terms immediately following the terms and conditions
 of the GNU General Public License which accompanied the btThread Source Code.
 If not, please request a copy in writing from Cristiano B. S. at the email address below.
 
@@ -29,27 +29,33 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
 
-/*Precompiled header to help speed up the compilation*/
-#ifndef _PRECOMPILED_H_
-#define _PRECOMPILED_H_
+#include <beatoThread.hpp>
 
-//SDL includes
-#include <SDL_assert.h>
-#include <SDL_thread.h>
-#include <SDL_mutex.h>
-#include <SDL_atomic.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
 
-#include <vector>
+#include <SDL.h>
 
-#include "btCommon.hpp"
-#include "btInstrusivePointer.hpp"
-#include "btErrHandler.hpp"
+int main(int argc, char *argv[])
+{
+	beatoThread::btDemultiplexThread worker = beatoThread::btDemultiplexThread();
+	std::cout << "Starting Event Driven Test" << std::endl;
 
-#include "btAtomic.hpp"
-#include "btCriticalSection.hpp"
+	//set to detach , so we don't need wait for thread when he ends
+	worker.start(0, true);
 
-//thread handlers
-#include "btThreadBase.hpp"
-#include "btEventDrivenThread.hpp"
+	SDL_Event	evt;
+	do
+	{
+		SDL_WaitEvent(&evt)
 
-#endif //!_PRECOMPILED_H_
+	} while (evt);
+
+	//thread is a detached, we not need wait, only signal to end the loop
+	worker.exit(false);
+
+	//don't need on mingw debug 
+	getchar();
+	return 0;
+}

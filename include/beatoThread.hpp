@@ -37,5 +37,6 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 #include "btCriticalSection.hpp"
 #include "btAtomic.hpp"
 #include "btInstrusivePointer.hpp"
+#include "btEventDrivenThread.hpp"
 
 #endif // !_BEATO_THREAD_LIBRARY_H_

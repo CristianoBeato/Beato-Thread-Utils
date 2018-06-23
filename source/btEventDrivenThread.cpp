@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with btThread Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the btThread Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the terms and conditions 
+You should have received a copy of these additional terms immediately following the terms and conditions
 of the GNU General Public License which accompanied the btThread Source Code.
 If not, please request a copy in writing from Cristiano B. S. at the email address below.
 
@@ -29,27 +29,68 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
 
-/*Precompiled header to help speed up the compilation*/
-#ifndef _PRECOMPILED_H_
-#define _PRECOMPILED_H_
+#include "precompiled.h"
+#pragma hdrstop
 
-//SDL includes
-#include <SDL_assert.h>
-#include <SDL_thread.h>
-#include <SDL_mutex.h>
-#include <SDL_atomic.h>
-
-#include <vector>
-
-#include "btCommon.hpp"
-#include "btInstrusivePointer.hpp"
-#include "btErrHandler.hpp"
-
-#include "btAtomic.hpp"
-#include "btCriticalSection.hpp"
-
-//thread handlers
-#include "btThreadBase.hpp"
 #include "btEventDrivenThread.hpp"
 
-#endif //!_PRECOMPILED_H_
+beatoThread::btSynchronousEventDemultiplexer::btSynchronousEventDemultiplexer(void):
+	m_currentQueue(0),
+	m_asyncQueues(2),
+	m_asyncQueue(&m_asyncQueues[0])
+{
+	m_queueMtx = new btMutex;
+}
+
+beatoThread::btSynchronousEventDemultiplexer::~btSynchronousEventDemultiplexer(void)
+{
+	delete m_queueMtx;
+}
+
+void beatoThread::btSynchronousEventDemultiplexer::enqueueCapsule(const btIntrusivePtr<btAsyncEventMethod>& Capsule)
+{
+	btMutexLock mutex(m_queueMtx);
+	m_asyncQueue->push_back(Capsule);
+}
+
+void beatoThread::btSynchronousEventDemultiplexer::demultiplexEvents(void)
+{
+	eventQueue_t* localQueue = &m_asyncQueues[m_currentQueue];
+
+	// switch current queue
+	{
+		btMutexLock mutex(m_queueMtx);
+
+		m_currentQueue = (m_currentQueue + 1) % 2;
+		m_asyncQueue = &m_asyncQueues[m_currentQueue];
+	}
+
+	// invoke callbacks
+	for (eventQueue_t::iterator envent = localQueue->begin(); envent != localQueue->end(); ++envent)
+	{
+		(*envent)->invoke();
+	}
+
+	localQueue->clear();
+}
+
+beatoThread::btDemultiplexThread::btDemultiplexThread(void)
+{
+}
+
+beatoThread::btDemultiplexThread::~btDemultiplexThread(void)
+{
+}
+
+int beatoThread::btDemultiplexThread::run(void)
+{
+	//wait for quit comand
+	while (!isPendingExit())
+		demultiplexEvents();
+
+	return 0;
+}
+
+void beatoThread::btDemultiplexThread::notifyExit(void)
+{
+}

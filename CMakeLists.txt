@@ -54,6 +54,7 @@ set(BTHREAD_SOURCE
 	source/precompiled.cpp
 	source/btErrHandler.cpp
 	source/btInstrusivePointer.cpp
+	source/btEventDrivenThread.cpp
 	)
 
 set(BTHREAD_INCLUDE 
@@ -65,6 +66,7 @@ set(BTHREAD_INCLUDE
 	source/btErrHandler.hpp
 	include/btCommon.hpp
 	include/btInstrusivePointer.hpp
+	include/btEventDrivenThread.hpp
 	)
 
 include_directories(${SDL2_INCLUDE_DIR})

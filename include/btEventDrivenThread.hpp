@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with btThread Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the btThread Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the terms and conditions 
+You should have received a copy of these additional terms immediately following the terms and conditions
 of the GNU General Public License which accompanied the btThread Source Code.
 If not, please request a copy in writing from Cristiano B. S. at the email address below.
 
@@ -29,27 +29,55 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
 
-/*Precompiled header to help speed up the compilation*/
-#ifndef _PRECOMPILED_H_
-#define _PRECOMPILED_H_
+#ifndef _EVENT_DRIVEN_H_
+#define _EVENT_DRIVEN_H_
 
-//SDL includes
-#include <SDL_assert.h>
-#include <SDL_thread.h>
-#include <SDL_mutex.h>
-#include <SDL_atomic.h>
+namespace beatoThread
+{
+	//event call class
+	class btAsyncEventMethod :
+		public btRefObj
+	{
+	public:
+		// Run the method
+		virtual void invoke(void) = 0;
+	};
 
-#include <vector>
+	class btSynchronousEventDemultiplexer
+	{
+		typedef std::vector< btIntrusivePtr<btAsyncEventMethod> > eventQueue_t;
+	public:
+		btSynchronousEventDemultiplexer(void);
+		~btSynchronousEventDemultiplexer(void);
 
-#include "btCommon.hpp"
-#include "btInstrusivePointer.hpp"
-#include "btErrHandler.hpp"
+		// Put the event into the events queue
+		virtual void    enqueueCapsule(const btIntrusivePtr<btAsyncEventMethod>& Capsule);
 
-#include "btAtomic.hpp"
-#include "btCriticalSection.hpp"
+	protected:
+		// Events demultiplexer as described in Reactor pattern
+		virtual void	demultiplexEvents(void);
 
-//thread handlers
-#include "btThreadBase.hpp"
-#include "btEventDrivenThread.hpp"
+	private:
+		size_t						m_currentQueue;
+		std::vector<eventQueue_t>	m_asyncQueues;
+		eventQueue_t*				m_asyncQueue;
+		btMutex*					m_queueMtx;
+	};
 
-#endif //!_PRECOMPILED_H_
+	class btDemultiplexThread : 
+		public btThreadBase,
+		public btSynchronousEventDemultiplexer
+	{
+	public:
+		btDemultiplexThread(void);
+		~btDemultiplexThread(void);
+
+	protected:
+		// Worker routine
+		virtual int run(void);
+		virtual void notifyExit(void);
+
+	};
+};
+
+#endif // !_EVENT_DRIVEN_H_

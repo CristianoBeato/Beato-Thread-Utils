@@ -121,7 +121,7 @@ int main()
 {
 	unsigned int  *valCalc = new unsigned int(600);
 
-	std::cout << "Starting Basic Thread Test" << std::endl;
+	std::cout << "Starting Basic Mutex Test" << std::endl;
 
 #if !BT_DISBLE_PRINT_CTRL
 	//mutex to control the print to console,

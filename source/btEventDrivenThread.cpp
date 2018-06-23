@@ -74,7 +74,9 @@ void beatoThread::btSynchronousEventDemultiplexer::demultiplexEvents(void)
 	localQueue->clear();
 }
 
-beatoThread::btDemultiplexThread::btDemultiplexThread(void)
+beatoThread::btDemultiplexThread::btDemultiplexThread(void) : 
+	btThreadBase(),
+	btSynchronousEventDemultiplexer()
 {
 }
 

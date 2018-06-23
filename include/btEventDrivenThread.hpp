@@ -32,6 +32,8 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 #ifndef _EVENT_DRIVEN_H_
 #define _EVENT_DRIVEN_H_
 
+#include <vector>
+
 namespace beatoThread
 {
 	//event call class

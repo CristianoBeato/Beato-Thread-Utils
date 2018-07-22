@@ -70,7 +70,7 @@ set(BTHREAD_INCLUDE
 	)
 
 include_directories(${SDL2_INCLUDE_DIR})
-include_directories(include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(BUILD_SAMPLES)
 	add_subdirectory(samples)
@@ -78,10 +78,11 @@ endif(BUILD_SAMPLES)
 
 if(USE_PRECOMPILED_HEADERS)
 	set(PRECOMPILED_SOURCES ${BTHREAD_SOURCE})
-	list(REMOVE_ITEM PRECOMPILED_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/precompiled.cpp)
+	list(REMOVE_ITEM PRECOMPILED_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/source/precompiled.cpp)
 	if(MSVC)
-		set_source_files_properties(precompiled.cpp PROPERTIES COMPILE_FLAGS "/Ycprecompiled.h" OBJECT_OUTPUTS "precompiled.pch")
-        set_source_files_properties(${PRECOMPILED_SOURCES} PROPERTIES COMPILE_FLAGS "/Yuprecompiled.h" OBJECT_DEPENDS "precompiled.pch")
+		set_source_files_properties(${PRECOMPILED_SOURCES} PROPERTIES COMPILE_FLAGS "/Yuprecompiled.h" OBJECT_DEPENDS "precompiled.pch")
+		set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/source/precompiled.cpp 
+									PROPERTIES COMPILE_FLAGS "/Ycprecompiled.h" OBJECT_OUTPUTS "precompiled.pch")
 	else(MINGW)
 		foreach( src_file ${PRECOMPILED_SOURCES} )
 			#message(STATUS "-include precompiled.h for ${src_file}")

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with btThread Source Code.  If not, see <http://www.gnu.org/licenses/>.
 
 In addition, the btThread Source Code is also subject to certain additional terms.
-You should have received a copy of these additional terms immediately following the terms and conditions 
+You should have received a copy of these additional terms immediately following the terms and conditions
 of the GNU General Public License which accompanied the btThread Source Code.
 If not, please request a copy in writing from Cristiano B. S. at the email address below.
 
@@ -29,29 +29,51 @@ you may contact in writing Cristiano "Beato", cristianobeato_dm@hotmail.com.
 ===========================================================================
 */
 
-/*Precompiled header to help speed up the compilation*/
-#ifndef _PRECOMPILED_H_
-#define _PRECOMPILED_H_
-
-//SDL includes
-#include <SDL_assert.h>
-#include <SDL_thread.h>
-#include <SDL_mutex.h>
-#include <SDL_atomic.h>
-
-#include <vector>
-
-#include "btContainers.hpp"
+#ifndef _CONTAINERS_H_
+#define _CONTAINERS_H_
 
 #include "btCommon.hpp"
-#include "btInstrusivePointer.hpp"
-#include "btErrHandler.hpp"
 
-#include "btAtomic.hpp"
-#include "btCriticalSection.hpp"
+namespace beatoThread
+{
+	template <typename _type_>
+	class btVector
+	{
+	public:
+		btVector(void);
+		~btVector(void);
 
-//thread handlers
-#include "btThreadBase.hpp"
-#include "btEventDrivenThread.hpp"
+		void			clear(void);
 
-#endif //!_PRECOMPILED_H_
+		size_t			apend(const _type_ & obj);
+		size_t			prepend(const _type_ & obj);
+		size_t			insert(const _type_ & obj, int index = 0);
+
+		size_t			findIndex(const _type_ & obj) const;
+		
+		size_t			num(void) const;
+		size_t			numAllocated(void) const;
+		size_t			size(void) const;
+		
+		_type_*			getPtr(void);
+		const _type_*	getPtr(void) const;
+
+		const _type_& 	operator[](size_t index) const;
+		_type_& 		operator[](size_t index);
+
+		size_t			operator+=(const _type_ & obj);
+		size_t			operator+=(const btVector<_type_> & obj);
+
+
+		_type_& 		alloc(void);
+
+		bool			removeAt(size_t index);
+		bool			remove(const _type_ & obj);
+
+	private:
+		size_t			m_num;
+		size_t			m_size;
+		_type_ *		m_array;
+	};
+};
+#endif // !_CONTAINERS_H_
